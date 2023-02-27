@@ -1,3 +1,14 @@
+저장소 및 GPG 키 설정Permalink
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \
    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+   
+Nvidia-docker installPermalink
+$ sudo apt-get update
+$ sudo apt-get install -y nvidia-docker2
+
+docker 서비스 재시작Permalink
+$ sudo systemctl restart docker
+여기까지 실행하였다면 어떤 도커 이미지라도 컨테이너 실행하여서 제대로 설치가 되었는지 테스트를 해볼 수 있다. 나는 테스트로 Ubuntu 18.04 이미지를 컨테이너로 실행하여 테스트 하였다. GPU 사용을 위해 추가한 부분은 --gpus all 이다
+
+docker run --rm --gpus all ubuntu:18.04 nvidia-smi
