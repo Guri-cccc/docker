@@ -1,3 +1,5 @@
+FROM https://velog.io/@bbirong/Docker-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-ROS-%EC%84%A4%EC%B9%98
+
 Ubuntu 18.04 이미지 다운로드
 $ sudo docker pull ubuntu:bionic
 Ubuntu 이미지를 이용해 컨테이너 생성하기
