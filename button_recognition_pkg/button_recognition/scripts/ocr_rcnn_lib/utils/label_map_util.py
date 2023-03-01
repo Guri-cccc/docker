@@ -16,7 +16,7 @@
 """Label map utility functions."""
 
 import sys
-sys.path.append('/home/usrg/detection_ws/src/button_recognition/scripts/ocr_rcnn_lib/utils/')
+sys.path.append('/home/catkin_ws/src/button_recognition/scripts/ocr_rcnn_lib/utils/')
 # sys.path.append('.')
 
 import logging

@@ -4,11 +4,12 @@ from __future__ import print_function
 
 import sys
 
-sys.path.append('/home/usrg/detection_ws/src/button_recognition/scripts/ocr_rcnn_lib')
+sys.path.append('/home/catkin_ws/src/button_recognition/scripts/ocr_rcnn_lib')
 
 import rospy
 import rosnode
 from sensor_msgs.msg import Image
+from std_msgs.msg import Bool
 from button_recognition.msg import Button, ButtonArray
 
 import cv2
@@ -30,15 +31,20 @@ class ButtonRecognitionInterence(object):
         self.recognizer = CharacterRecognizer()
         self.button_recognizer = ButtonRecognizer()
 
-        sub_image = rospy.Subscriber("/cam_ee/color/image_raw", Image, self.ImageCallback)
+        self.sub_image = rospy.Subscriber("/cam_ee/color/image_raw", Image, self.ImageCallback)
         
         self.pub_detection_image = rospy.Publisher('/button_detection/image', Image, queue_size=10)
         self.pub_detection_result = rospy.Publisher('/button_detection/detections', ButtonArray, queue_size=10)
-
-        
-
+        self.pub = rospy.Publisher('/button_detection/temp', Bool, queue_size=10)
 
     def ImageCallback(self, msg):
+        print("1")
+        print(rospy.get_rostime())
+
+        f_data = Bool()
+        f_data.data = True
+        self.pub.publish(f_data)
+
         image_np = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
         image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
 
@@ -63,8 +69,10 @@ class ButtonRecognitionInterence(object):
         #     m_detection_result.buttons.append(button)
         #     cv2.rectangle(image_np, (button.x_min, button.y_min), (button.x_max, button.y_max), (0, 255, 0), thickness=10)
             
+        print("2")
         boxes, scores, _ = self.detector.predict(image_np, True)
         button_patches, button_positions, _ = self.button_candidates(boxes, scores, image_np)
+        print("3")
 
         m_detection_result = ButtonArray()
         for button_img, button_pos in zip(button_patches, button_positions):
@@ -86,7 +94,7 @@ class ButtonRecognitionInterence(object):
             cv2.rectangle(image_np, (button.x_min, button.y_min), (button.x_max, button.y_max), (0, 255, 0), thickness=3)
             cv2.putText(image_np, button_text, text_position, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
             cv2.putText(image_np, str(round(button_score,3)), score_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
-        
+        print("4")
         ros_image = Image()
         ros_image.data = image_np.flatten().tobytes()
         ros_image.header.stamp = rospy.Time.now()
@@ -95,9 +103,12 @@ class ButtonRecognitionInterence(object):
         ros_image.height = image_np.shape[0]
         ros_image.encoding = "bgr8"
         ros_image.step = image_np.shape[1] * image_np.shape[2]
+        print("5")
         
         self.pub_detection_image.publish(ros_image)
+        print("6")
         self.pub_detection_result.publish(m_detection_result)
+        print("7")
         
         # self.button_recognizer.clear_session()
         

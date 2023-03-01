@@ -1,0 +1,24 @@
+FROM ubuntu18_cuda11.3_cudnn8_ros:latest
+
+RUN apt-get update
+RUN apt-get install python-pip -y
+RUN apt-get install python3-pip -y
+RUN pip3 install --upgrade pip
+
+RUN pip3 install tensorflow==2.5.2
+
+RUN apt-get install tmux -y
+RUN apt-get install vim -y
+RUN pip3 install opencv-python
+RUN pip3 install pyyaml
+RUN pip3 install rospkg
+
+RUN pip3 install pillow matplotlib lxml imageio --user
+RUN apt-get install libjpeg-dev -y
+RUN apt-get install libopencv-dev -y
+
+RUN mkdir -p /home/catkin_ws/src
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace /home/catkin_ws/src'
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make'
+RUN echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
+

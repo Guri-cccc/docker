@@ -1,0 +1,25 @@
+FROM detections:latest
+
+#RUN mkdir -p /home/catkin_ws/src
+#RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace /home/catkin_ws/src'
+#RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make'
+#RUN echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+#RUN apt-get install tmux -y
+#RUN apt-get install vim -y
+#RUN pip3 install opencv-python
+#RUN pip3 install pyyaml
+#RUN pip3 install rospkg
+
+#RUN pip3 install pillow matplotlib lxml imageio --user
+#RUN apt-get install libjpeg-dev -y
+#RUN apt-get install libopencv-dev -y
+
+COPY ./button_recognition_pkg /home/catkin_ws/src
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make'
+
+ENV ROS_MASTER_URI http://192.168.1.99:11311
+#ENV ROS_HOSTNAME 192.168.1.66
+ENV ROS_IP 192.168.1.66
+
+WORKDIR /home/catkin_ws/src/button_recognition/scripts

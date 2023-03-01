@@ -1,8 +1,0 @@
-FROM ubuntu18_cuda_10.1_7_ros:latest
-
-RUN apt-get update
-RUN apt-get install python-pip -y
-RUN apt-get install python3-pip -y
-RUN pip3 install --upgrade pip
-
-RUN pip3 install tensorflow==2.2.0

@@ -1,7 +1,7 @@
-FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 as first
+FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu18.04
 
-RUN echo 'export PATH=/usr/local/cuda-10.1/bin${PATH:+:${PATH}}' >> ~/.bashrc
-RUN echo 'export LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
+RUN echo 'export PATH=/usr/local/cuda-11.3/bin${PATH:+:${PATH}}' >> ~/.bashrc
+RUN echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.3/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
 RUN echo 'export PATH=/usr/local/cuda/bin:/$PATH' >> ~/.bashrc
 RUN echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
 
