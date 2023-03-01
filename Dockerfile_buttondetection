@@ -1,0 +1,13 @@
+FROM detections_ws:latest
+
+RUN mkdir -p /home/catkin_ws/src
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace /home/catkin_ws/src'
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make'
+RUN echo "source /home/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+RUN apt-get install libopencv-dev -y
+
+COPY ./button_recognition_pkg /home/catkin_ws/src
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make'
+
+WORKDIR /home
