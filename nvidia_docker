@@ -1,3 +1,44 @@
+FROM: https://laoonlee.tistory.com/20
+
+저장소 및 GPG 키 설정
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \
    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+   
+Nvidia-docker install
+$ sudo apt-get update
+$ sudo apt-get install -y nvidia-docker2
+
+docker 서비스 재시작
+$ sudo systemctl restart docker
+여기까지 실행하였다면 어떤 도커 이미지라도 컨테이너 실행하여서 제대로 설치가 되었는지 테스트를 해볼 수 있다. 나는 테스트로 Ubuntu 18.04 이미지를 컨테이너로 실행하여 테스트 하였다. GPU 사용을 위해 추가한 부분은 --gpus all 이다
+
+docker run --rm --gpus all ubuntu:18.04 nvidia-smi
+
+
+### GPU 자원을 사용하며 도커 실행
+컨테이너 실행 시
+Docker 를 실행할 때 GPU 자원을 사용하는 방식은 대략 2가지정도를 설명할 수 있다.
+
+첫 번째는 --gpus 옵션을 주는 것.
+--gpus 사용 사용 예제는 다음과 같다. 예제에 사용된 컨테이너 이미지는 Ubuntu:18.04로 한다.
+  docker run --rm --gpus all ubuntu:18.04 nvidia-smi
+특정 gpu만을 지정하여 사용하려면 all 대신 디바이스 번호인 0, 1등으로 지정해주면 된다.
+  docker run --rm --gpus 0 ubuntu:18.04 nvidia-smi
+두 번째는 --runtime과 환경변수로 -e NVIDIA_VISIBLE_DEVICES 옵션을 주는 것.
+--runtime 사용 해당 옵션을 사용할 때는 환경변수 NVIDIA_VISIBLE_DEVICES를 같이 준다.
+  docker run --rm --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all ubuntu:18.04 nvidia-smi
+해당 옵션 또한 특정 GPU 디바이스를 지정할 수 있다.
+  docker run --rm --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=0 ubuntu:18.04 nvidia-smi
+기본으로 nvidia runtime을 사용하게 하기Permalink
+docker build 명령어를 통해 도커 이미지를 사용할 때 가끔 GPU 자원이 필요한 경우가 있다. 이때는 docker run 명령어가 아니라서 빌드 시 GPU 자원을 사용하게 해주기가 쉽지 않다. 다음과 같이 해결 가능하다.
+
+$ sudo systemctl stop docker
+$ sudo systemctl stop docker.socket
+$ sudo vi /etc/docker/daemon.json
+다음 문구를 추가해준다. 앞선 설정이 있다면 콤마(,)를 붙이고 넣어준다.
+
+"default-runtime": "nvidia"
+도커를 재시작한다.
+
+$ sudo systemctl start dockerv

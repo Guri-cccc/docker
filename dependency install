@@ -1,0 +1,6 @@
+CUDA cuDNN
+$ sudo docker pull nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
+$ sudo docker pull nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+
+Tensorflow
+$ sudo docker pull tensorflow/tensorflow:2.3.0-gpu
