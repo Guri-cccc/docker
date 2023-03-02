@@ -20,6 +20,6 @@ RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make
 
 ENV ROS_MASTER_URI http://192.168.1.99:11311
 #ENV ROS_HOSTNAME 192.168.1.66
-ENV ROS_IP 192.168.1.66
+ENV ROS_IP 192.168.1.100
 
 WORKDIR /home/catkin_ws/src/button_recognition/scripts
