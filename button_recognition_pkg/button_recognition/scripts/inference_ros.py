@@ -35,13 +35,8 @@ class ButtonRecognitionInterence(object):
         
         self.pub_detection_image = rospy.Publisher('/button_detection/image', Image, queue_size=10)
         self.pub_detection_result = rospy.Publisher('/button_detection/detections', ButtonArray, queue_size=10)
-        self.pub = rospy.Publisher('/button_detection/temp', Bool, queue_size=10)
 
     def ImageCallback(self, msg):
-
-        f_data = Bool()
-        f_data.data = True
-        self.pub.publish(f_data)
 
         image_np = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
         image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
