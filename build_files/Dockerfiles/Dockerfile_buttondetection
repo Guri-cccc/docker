@@ -1,4 +1,4 @@
-FROM detections:latest
+FROM tensorflow2.5.2_basic_depends:latest
 
 #RUN mkdir -p /home/catkin_ws/src
 #RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace /home/catkin_ws/src'
@@ -15,7 +15,7 @@ FROM detections:latest
 #RUN apt-get install libjpeg-dev -y
 #RUN apt-get install libopencv-dev -y
 
-COPY ./button_recognition_pkg /home/catkin_ws/src
+COPY ./built_in_pkgs/button_recognition_pkg /home/catkin_ws/src
 RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; cd /home/catkin_ws; catkin_make'
 
 ENV ROS_MASTER_URI http://192.168.1.99:11311
